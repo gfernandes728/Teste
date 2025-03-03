@@ -1,0 +1,145 @@
+﻿@model Teste.Models.ViewModels.SelecaoViewModels
+
+<div id="selecaoId-@Model.SelecaoId">
+
+    <h1 class="text-warning">SECTION 2</h1>
+    <p><strong class="selection-color">@Model.Titulo</strong></p>
+
+    <h5 class="text-warning">Categoria 1</h5>
+
+    @if (Model.Formularios.Any())
+    {
+        <div id="containerCampos">
+            @for (var i = 0; i < Model.Formularios.Count; i++)
+            {
+                <div class="row">
+                    <label>Item @(i + 1)</label>
+                    @if (Model.Formularios[i].Nome == "Texto Simples")
+                    {
+                        <input type="text" id="campo-@Model.Formularios[i].FormularioId" value="@Model.Formularios[i].Nome" readonly />
+                    }
+                    else if (Model.Formularios[i].Nome == "Dropdown")
+                    {
+                        <select id="campo-@Model.Formularios[i].FormularioId" disabled>
+                        </select>
+                    }
+                    else if (Model.Formularios[i].Nome == "Html")
+                    {
+                        <textarea class="textarea-campo" id="campo-@Model.Formularios[i].FormularioId" rows="5" readonly> </textarea>
+                    }
+                </div>
+            }
+        </div>
+
+        <h5 class="text-warning">Categoria 2</h5>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Tipo</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < Model.Formularios.Count; i++)
+                            {
+                                <tr>
+                                    <td>Item @(i + 1)</td>
+                                    <td>@Model.Formularios[i].Nome</td>
+                                    <td>
+                                        <input type="button" value="Editar" onclick="abrirModal(@(i + 1), @Model.SelecaoId, @Model.Formularios[i].CampoId, @Model.Formularios[i].FormularioId);" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <h5 class="text-warning">Categoria 3</h5>
+
+        @foreach(var item in Model.Arquivos)
+        {
+            <img src="/Formulario/ObterArquivo?arquivoId=@item.ArquivoId" alt="Imagem Carregada" width="300">
+        }
+
+        @await Html.PartialAsync("~/Views/Shared/_DragDrop.cshtml", Model)
+    }
+    else
+    {
+        <input type="hidden" id="ultimoCampoId" value="1" />
+
+        <div id="containerCampos">
+            <div id="campoId-1">
+                <label>Item 1</label>
+                <select id="selectedCampoIds-0">
+                    @for (var i = 0; i < Model.Campos.Count; i++)
+                    {
+                        <option value="@Model.Campos[i].Value">@Model.Campos[i].Text</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <input type="button" id="adicionarItem" onclick="adicionarItem(@Model.SelecaoId);" value="Adicionar Campo" />
+    }
+
+    <input type="button" class="btn btn-primary" value="Salvar" onclick="salvarItem(@Model.SelecaoId);">
+
+    <hr />
+
+    <div class="modal" tabindex="-1" role="dialog" id="modal-body">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="fecharModal(@Model.SelecaoId);">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="formularioId" value="0" />
+                    <select id="selectedCampoId">
+                        @for (var i = 0; i < Model.Campos.Count; i++)
+                        {
+                            <option value="@Model.Campos[i].Value">@Model.Campos[i].Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="salvarModal(@Model.SelecaoId);">Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="fecharModal(@Model.SelecaoId);">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/selecao.js" asp-append-version="true"></script>
+
+<script>
+    $(document).ready(function () {
+        dadosTextArea();
+    });
+
+    function dadosTextArea() {
+        const dadosSelecao = $("#selecaoId-" + @Model.SelecaoId.ToString());
+        const textarea = $(".textarea-campo", dadosSelecao);
+        const total = textarea.length;
+
+        if (total === 0) {
+            return;
+        }
+
+        for (let i = 0; i < total; i++) {
+            CKEDITOR.replace(textarea[i].id);
+        }
+    }
+</script>

@@ -1,0 +1,23 @@
+﻿.inputTypeFile {
+    display: none !important;
+}
+
+.dropContainerFiles {
+    border: 3px dashed #808080;
+    padding: 6px;
+    text-align: center;
+    font-size: 24px;
+}
+
+.dropContainerLabel {
+    font-size: 65px;
+    cursor: pointer;
+}
+
+.clickCursor {
+    cursor: pointer;
+}
+
+.marginUpload {
+    margin-bottom: 16px;
+}

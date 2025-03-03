@@ -1,0 +1,36 @@
+﻿@model Teste.Models.ViewModels.SelecaoViewModels
+
+<link rel="stylesheet" href="~/css/dragDrop.css" />
+
+@{
+    var selecaoId = Model.SelecaoId;
+}
+
+<div>
+    <div class="col-lg-12 marginUpload">
+        <input id="inputFile-@selecaoId" type="file" multiple accept=".pdf" class="inputTypeFile" />
+        <div id="dropContainer-@selecaoId" class="dropContainerFiles">
+            <label>
+                <i class="fa-solid fa-cloud-arrow-up dropContainerLabel" onclick="dragDrop.uploadInputFiles(@selecaoId);"></i>
+                <br />Carregar arquivos.
+            </label>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" id="tablePreview-@selecaoId">
+            </table>
+        </div>
+    </div>
+
+    <input type="button" id="salvarArquivos-@selecaoId" onclick="dragDrop.salvarArquivos(@selecaoId);" value="Salvar Arquivos" />
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/js/dragDrop.js" asp-append-version="true"></script>
+
+<script>
+    $(document).ready(function () {
+        dragDrop.init(@selecaoId);
+    });
+</script>
